@@ -13,7 +13,7 @@ Perlin noise is a procedural texture primitive, a type of gradient noise used by
 ## How to install perlin noise?
 
 1. Download Latest Release.
-2. Extract files.
+2. Extract those files.
 3. Open console/powershell in that folder.
 4. run those commands
 ```
