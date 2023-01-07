@@ -10,100 +10,8 @@
 
 using namespace std;
 
-/*int p[] = {151, 160, 137, 91,  90,  15,  131, 13,  201, 95,  96,  53,  194,
-233, 7,   225, 140, 36,  103, 30,  69,  142, 8,   99,  37,  240, 21,  10, 23,
-190, 6,   148, 247, 120, 234, 75,  0,   26,  197, 62,  94,  252, 219, 203, 117,
-35,  11,  32,  57,  177, 33,  88,  237, 149, 56,  87, 174, 20,  125, 136, 171,
-168, 68,  175, 74,  165, 71,  134, 139, 48, 27,  166, 77,  146, 158, 231, 83,
-111, 229, 122, 60,  211, 133, 230, 220, 105, 92,  41,  55,  46,  245, 40,  244,
-102, 143, 54,  65,  25, 63,  161, 1,   216, 80,  73,  209, 76,  132, 187, 208,
-89,  18,  169, 200, 196, 135, 130, 116, 188, 159, 86,  164, 100, 109, 198, 173,
-186, 3,   64,  52,  217, 226, 250, 124, 123, 5,   202, 38,  147, 118, 126, 255,
-82,  85,  212, 207, 206, 59,  227, 47,  16,  58,  17,  182, 189, 28,  42,  223,
-183, 170, 213, 119, 248, 152, 2,   44,  154, 163, 70, 221, 153, 101, 155, 167,
-43,  172, 9,   129, 22,  39,  253, 19,  98, 108, 110, 79,  113, 224, 232, 178,
-185, 112, 104, 218, 246, 97,  228, 251, 34,  242, 193, 238, 210, 144, 12,  191,
-179, 162, 241, 81,  51, 145, 235, 249, 14,  239, 107, 49,  192, 214, 31,  181,
-199, 106, 157, 184, 84,  204, 176, 115, 121, 50,  45,  127, 4,   150, 254, 138,
-236, 205, 93,  222, 114, 67,  29,  24,  72,  243, 141, 128, 195, 78,  66, 215,
-61,  156, 180};
-
-float fade(float t) { return t * t * t * (t * (6 * t - 15) + 10); }
-
-float lerp(float a0, float a1, float t) { return a0 + t * (a1 - a0); }
-
-float dotp(Vector2 a, Vector2 b) { return a.x * b.x + a.y * b.y; }
-
-Vector2 grad(int a) {
-  Vector2 v[16] = {{sqrt(3) / 2.0, 0.5f},
-                   {-sqrt(3) / 2.0, 0.5f},
-                   {-sqrt(3) / 2.0, -0.5f},
-                   {sqrt(3) / 2.0, -0.5f},
-                   {sqrt(2) / 2, sqrt(2) / 2},
-                   {-sqrt(2) / 2, sqrt(2) / 2},
-                   {-sqrt(2) / 2, -sqrt(2) / 2},
-                   {sqrt(2) / 2, -sqrt(2) / 2},
-                   {1, 0},
-                   {-1, 0},
-                   {0, 1},
-                   {0, -1},
-                   {0.5f, sqrt(3) / 2.0},
-                   {-0.5f, sqrt(3) / 2.0},
-                   {-0.5f, -sqrt(3) / 2.0},
-                   {0.5f, -sqrt(3) / 2.0}};
-
-  return v[a & 15];
-}
-
-float perlinNoise2(float x, float y) {
-  // 1 - Topleft, 2 - topright, 3 - bottom left, 4 - bottom right
-  int xInd = (int)floor(x) % 256;
-  int yInd = (int)floor(y) % 256;
-
-  x -= floor(x);
-  y -= floor(y);
-
-  Vector2 DirectionTopRight = {x - 1.0, y};
-  Vector2 DirectionTopLeft = {x, y};
-  Vector2 DirectionBottomRight = {x - 1.0, y - 1.0};
-  Vector2 DirectionBottomLeft = {x, y - 1.0};
-
-  Vector2 GradientTopRight = grad(p[p[xInd + 1] + yInd]);
-  Vector2 GradientTopLeft = grad(p[p[xInd] + yInd]);
-  Vector2 GradientBottomRight = grad(p[p[xInd + 1] + yInd + 1]);
-  Vector2 GradientBottomLeft = grad(p[p[xInd] + yInd + 1]);
-
-  float dotTopRight = dotp(DirectionTopRight, GradientTopRight);
-  float dotTopLeft = dotp(DirectionTopLeft, GradientTopLeft);
-  float dotBottomRight = dotp(DirectionBottomRight, GradientBottomRight);
-  float dotBottomLeft = dotp(DirectionBottomLeft, GradientBottomLeft);
-
-  // Fade Values
-  float u = fade(x);
-  float v = fade(y);
-
-  // Interpolations
-  float a = lerp(dotTopLeft, dotTopRight, u);
-  float b = lerp(dotBottomLeft, dotBottomRight, u);
-
-  return lerp(a, b, v);
-}
-
-float OctavePerlin(float x, float y, int octaves, float persistance) {
-  float total = 0, frequency = 1, amplitude = 1, maxVal = 0;
-
-  for (int i = 0; i < octaves; i++) {
-    total += perlinNoise2(x * frequency, y * frequency) * amplitude;
-
-    maxVal += amplitude;
-    amplitude *= persistance;
-    frequency *= 2;
-  }
-
-  return total / maxVal;
-}*/
-
 int main(void) {
+  srand(time(0));
   const int screenWidth = 512;
   const int screenHeight = 512;
 
@@ -111,36 +19,34 @@ int main(void) {
 
   SetTargetFPS(60);
 
-  Image img = GenImageColor(512, 512, BLACK);
+  Image img = GenImageColor(GetScreenWidth(), GetScreenHeight(), BLACK);
   Texture tx = LoadTextureFromImage(img);
 
   PerlinNoise perlin(8, 0.5);
 
-  float xoff = 0;
+  int seed = rand();
+  perlin.genOff(seed);
+
+  for (int y = 0; y < 512; y++) {
+    for (int x = 0; x < 512; x++) {
+      float n = perlin.Get2d(x, y, 256);
+
+      n += 1;
+      n /= 2;
+      unsigned char c = (unsigned char)round(n * 255);
+
+      ImageDrawPixel(&img, x, y, Color{c, c, c, (unsigned char)255});
+    }
+  }
+  UpdateTexture(tx, img.data);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
-
-    for (int y = 0; y < 512; y++) {
-      for (int x = xoff; x < 512 + xoff; x++) {
-        float n = perlin.Get2d(x * 0.01, y * 0.01);
-
-        n += 1;
-        n /= 2;
-        unsigned char c = round(n * 255);
-
-        ImageDrawPixel(&img, x - xoff, y, Color{c, c, c, (unsigned char)255});
-      }
-    }
-
-    UpdateTexture(tx, img.data);
 
     ClearBackground(BLACK);
     DrawTexture(tx, 0, 0, WHITE);
 
     EndDrawing();
-
-    xoff += 1;
   }
 
   UnloadImage(img);
